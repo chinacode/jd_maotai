@@ -1,6 +1,7 @@
 import random
 import sys
 import time
+import json
 from jdlogger import logger
 from timer import Timer
 import requests
@@ -175,6 +176,7 @@ class Jd_Mask_Spider(object):
             'Host': 'marathon.jd.com',
         }
         resp = self.session.post(url=url, data=data, headers=headers)
+        logger.info("_get_seckill_init_info {}".format(resp.text))
         return parse_json(resp.text)
 
     def _get_seckill_order_data(self):
@@ -185,6 +187,8 @@ class Jd_Mask_Spider(object):
         # 获取用户秒杀初始化信息
         self.seckill_init_info[self.sku_id] = self._get_seckill_init_info()
         init_info = self.seckill_init_info.get(self.sku_id)
+        logger.info("_get_seckill_order_data  {}".format(json.dumps(init_info)))
+
         default_address = init_info['addressList'][0]  # 默认地址dict
         invoice_info = init_info.get('invoiceInfo', {})  # 默认发票信息dict, 有可能不返回
         token = init_info['token']

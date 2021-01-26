@@ -22,14 +22,24 @@ if __name__ == '__main__':
             kill_per_time = global_config.getRaw('config', 'kill_per_time')
             while True:
                 tryTimes = tryTimes + 1
-                logger.info("-------------------------------------->开始第{}次抢购<--------------------------------------".format(tryTimes))
-                start_tool.request_seckill_url()
-                start_tool.request_seckill_checkout_page()
-                # 可能需要的链接
-                # https://tak.jd.com/t/98DD1?_t=1611281236817
-                start_tool.submit_seckill_order()
-                time.sleep(kill_per_time)
-            logger.info("-------------------------------------->完成了{}次抢购,你运气不好没办法<--------------------------------------".format(tryTimes))
+                logger.info("---------------------------->开始第{}次抢购<-----------------------------".format(tryTimes))
+                try:
+                    start_tool.request_seckill_url()
+                except Exception as e:
+                    logger.error("request_seckill_url fail error {}".format(e))
+                try:
+                    start_tool.request_seckill_checkout_page()
+                except Exception as e:
+                    logger.error("request_seckill_checkout_page fail error {}".format(e))
+
+                # 可能需要的链接 https://tak.jd.com/t/98DD1?_t=1611281236817
+                try:
+                    start_tool.submit_seckill_order()
+                except Exception as e:
+                    logger.error("submit_seckill_order fail error {}".format(e))
+
+                time.sleep(float(kill_per_time))
+            logger.info("------------------------>完成了{}次抢购,你运气不好没办法<----------------------".format(tryTimes))
         else:
             logger.error("没有此功能")
             sys.exit(1)
